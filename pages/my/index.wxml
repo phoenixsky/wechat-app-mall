@@ -221,7 +221,7 @@
   </view> -->
   
   <view class="space"></view>
-  <view class="version">EastWorld v {{version}}</view>
+  <view class="version">珍珍生活馆 v {{version}}</view>
   <view class="space"></view>
 </view>
 
