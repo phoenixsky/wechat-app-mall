@@ -23,10 +23,10 @@
     </view>
   </view>
   <view class="peisong-way">
-    <view class="row-box" wx:if="{{isNeedLogistics > 0}}">
+    <view class="row-box" wx:if='{{isNeedLogistics > 0 || allowSelfCollection == "1"}}'>
       <view class="row-label">配送方式</view>
       <radio-group bindchange="radioChange">
-        <label class="radio">
+        <label class="radio" wx:if="{{isNeedLogistics > 0 }}">
           <radio value="kd" checked="{{peisongType == 'kd'}}" /> 快递
         </label>
         <label class="radio" wx:if='{{allowSelfCollection == "1"}}'>
@@ -84,7 +84,7 @@
     </view>
   </view>
 
-  <view class="jiesuan-box safeAreaOldPaddingBttom safeAreaNewPaddingBttom">
+  <view class="jiesuan-box safeAreaNewMarginBttom safeAreaOldMarginBttom">
     <view class="left-price">
       <view class="total">合计：¥ {{(allGoodsAndYunPrice*100 - youhuijine*100)/100}} + {{totalScoreToPay}} 积分</view>
     </view>

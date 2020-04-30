@@ -3,10 +3,10 @@
   <view class="swiper-container">
     <swiper class="swiper_box" indicator-dots="true" indicator-active-color="#fff" autoplay="{{!goodsDetail.basicInfo.videoId}}" circular>
       <swiper-item wx:if="{{goodsDetail.basicInfo.videoId}}">
-        <video src="{{videoMp4Src}}" autoplay="true" loop="true" style='width:100%;height:100%;'></video>
+        <video src="{{videoMp4Src}}" autoplay="true" muted show-mute-btn loop="true" style='width:100%;height:100%;'></video>
       </swiper-item>
       <swiper-item wx:for="{{goodsDetail.pics}}" wx:key="id">
-        <image src="{{item.pic}}" class="slide-image" mode="aspectFill" lazy-load="true" />
+        <image src="{{item.pic}}" class="slide-image" mode="aspectFit" lazy-load="true" />
       </swiper-item>      
     </swiper>
   </view>
@@ -273,7 +273,7 @@
       <view class="safeAreaOldPaddingBttom safeAreaNewPaddingBttom" wx:if="{{shopType =='addShopCar'}}" bindtap="addShopCar">
         <view class="popup-join-btn">加入购物车</view>
       </view>
-      <view class="safeAreaOldPaddingBttom safeAreaNewPaddingBttom" data-shopType="{{shopType}}" wx:if="{{shopType =='tobuy' || shopType =='toPingtuan'}}" bindtap="buyNow">
+      <view class="safeAreaOldMarginBttom safeAreaNewMarginBttom" data-shopType="{{shopType}}" wx:if="{{shopType =='tobuy' || shopType =='toPingtuan'}}" bindtap="buyNow">
         <view class="popup-join-btn">立即购买</view>
       </view>
     </view>

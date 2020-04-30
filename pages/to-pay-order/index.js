@@ -23,7 +23,7 @@ Page({
     curCoupon: null, // 当前选择使用的优惠券
     curCouponShowText: '请选择使用优惠券', // 当前选择使用的优惠券
     allowSelfCollection: '0', // 是否允许到店自提
-    peisongType: 'kd', // 配送方式 kd,zq 分别表示快递/到店自取
+    peisongType: 'zq', // 配送方式 kd,zq 分别表示快递/到店自取
     remark: ''
   },
   onShow(){
@@ -119,7 +119,8 @@ Page({
       token: loginToken,
       goodsJsonStr: that.data.goodsJsonStr,
       remark: remark,
-      peisongType: that.data.peisongType
+      peisongType: that.data.peisongType,
+      isCanHx:that.data.peisongType == 'zq',
     };
     if (that.data.kjId) {
       postData.kjid = that.data.kjId
