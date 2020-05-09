@@ -57,7 +57,7 @@
 }
 .goodsDynamic {
   position: absolute;
-  top: 110rpx;
+  top: 20rpx;
   left: 25rpx;
   width: 650rpx;
   background: rgba(0, 0, 0, 0.6);
