@@ -39,7 +39,7 @@ Page({
   aboutUs : function () {
     wx.showModal({
       title: '关于我们',
-      content: '珍珍生活馆，期待你的光临',
+      content: '珍珍生活馆，期待你的光临\n Powered By Phoenixsky',
       showCancel:false
     })
   },
