@@ -37,11 +37,6 @@ Page({
     })
   },
   async doneShow() {
-    let allowSelfCollection = wx.getStorageSync('ALLOW_SELF_COLLECTION')
-    if (!allowSelfCollection || allowSelfCollection != '1') {
-      allowSelfCollection = '0'
-      this.data.peisongType = 'kd'
-    }
     let shopList = [];
     const token = wx.getStorageSync('token')
     //立即购买下单
@@ -60,7 +55,6 @@ Page({
     }
     this.setData({
       goodsList: shopList,
-      allowSelfCollection: allowSelfCollection,
       peisongType: this.data.peisongType
     });
     this.initShippingAddress()
@@ -97,7 +91,7 @@ Page({
       wx.requestSubscribeMessage({
         tmplIds: subscribe_ids.split(','),
         success(res) {
-          
+
         },
         fail(e) {
           console.error(e)
@@ -108,7 +102,7 @@ Page({
       })
     } else {
       this.createOrder(true)
-    }    
+    }
   },
   createOrder: function (e) {
     var that = this;
@@ -147,7 +141,7 @@ Page({
         postData.linkMan = that.data.curAddressData.linkMan;
         postData.mobile = that.data.curAddressData.mobile;
         postData.code = that.data.curAddressData.code;
-      }      
+      }
     }
     if (that.data.curCoupon) {
       postData.couponId = that.data.curCoupon.id;
@@ -219,7 +213,7 @@ Page({
     }
     this.processYunfei();
   },
-  processYunfei() {    
+  processYunfei() {
     var goodsList = this.data.goodsList
     if (goodsList.length == 0) {
       return

@@ -61,7 +61,7 @@
       <view class="row-label t">使用优惠券</view>
     </view>
     <picker bindchange="bindChangeCoupon" range="{{coupons}}" range-key="nameExt">
-      <view class="row-box" style="border-bottom:none;">      
+      <view class="row-box" style="border-bottom:none;">
         <view class="row-label">{{curCouponShowText}}</view>
         <image class="next" src="/images/icon/next.png"></image>
       </view>
@@ -74,7 +74,7 @@
       <view class="row-label">商品金额</view>
       <view class="right-text">¥ {{allGoodsPrice}}</view>
     </view>
-    <view class="row-box" wx:if="{{isNeedLogistics > 0}}">
+    <view class="row-box" wx:if="{{isNeedLogistics > 0 && peisongType == 'kd'}}">
       <view class="row-label">运费</view>
       <view class="right-text">+ ¥ {{yunPrice}}</view>
     </view>
