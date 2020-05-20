@@ -1,0 +1,15 @@
+
+var substring = function (val, start, end) {
+  if (!val || val.length === 0 || start === undefined || start == null) {
+      console.log('substring 参数不合法\n' + val +'\n'+ start + '\n' + end)
+      return;
+  }
+  val = val.toString();
+  if (val.length > end) {
+      return val.toString().substring(start, end);
+  } else {
+      return val;
+  }
+}
+
+module.exports.substring = substring;
