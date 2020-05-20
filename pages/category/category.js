@@ -1,4 +1,5 @@
-const WXAPI = require('apifm-wxapi')
+
+const WXAPI = require('../../utils/api')
 const AUTH = require('../../utils/auth')
 const TOOLS = require('../../utils/tools.js') // TOOLS.showTabBarBadge();
 
@@ -7,6 +8,7 @@ Page({
    * 页面的初始数据
    */
   data: {
+    imgPre: WXAPI.imgPre,
     categories: [],
     categorySelected: {
       name: '',
@@ -15,6 +17,9 @@ Page({
     currentGoods: [],
     onLoadStatus: true,
     scrolltop: 0,
+
+    curPage: 1,
+    pageSize: 20,
 
     skuCurGoods: undefined
   },
@@ -31,12 +36,12 @@ Page({
     wx.showLoading({
       title: '加载中',
     })
-    const res = await WXAPI.goodsCategory()
+    const res = await WXAPI.getOptionList('wshop_category');
     wx.hideLoading()
     let categories = [];
     let categoryName = '';
     let categoryId = '';
-    if (res.code == 0) {
+    if (res.code == 100) {
       if (this.data.categorySelected.id) {
         const _curCategory = res.data.find(ele => {
           return ele.id == this.data.categorySelected.id
@@ -62,25 +67,48 @@ Page({
     });
     this.getGoodsList();
   },
-  async getGoodsList() {
+  async getGoodsList(append) {
     wx.showLoading({
       title: '加载中',
     })
     const res = await WXAPI.goods({
       categoryId: this.data.categorySelected.id,
-      page: 1,
-      pageSize: 100000
+      page: this.data.curPage,
+
     })
     wx.hideLoading()
-    if (res.code == 700) {
-      this.setData({
-        currentGoods: null
-      });
+    if (res.code != 100) {
+      if(!append){
+        this.setData({
+          currentGoods: null
+        });
+      }
       return
     }
+
+    if(append){
+      if(res.data.length == 0){
+        wx.showToast({
+          title: '没有更多数据了',
+          icon:'none'
+        })
+      }
+      this.setData({
+        currentGoods: [...this.data.currentGoods,...res.data]
+      });
+    }else{
+      this.setData({
+        currentGoods: res.data
+      });
+    }
+
+  },
+
+  loadmore: function() {
     this.setData({
-      currentGoods: res.data
+      curPage: this.data.curPage + 1
     });
+    this.getGoodsList(true)
   },
   toDetailsTap: function(e) {
     wx.navigateTo({
@@ -93,6 +121,7 @@ Page({
     if (id === that.data.categorySelected.id) {
       that.setData({
         scrolltop: 0,
+
       })
     } else {
       var categoryName = '';
@@ -108,7 +137,8 @@ Page({
           name: categoryName,
           id: id
         },
-        scrolltop: 0
+        scrolltop: 0,
+        curPage: 1
       });
       that.getGoodsList();
     }
@@ -126,7 +156,7 @@ Page({
       url: '/pages/goods/list?name=' + this.data.inputVal,
     })
   },
-  onShareAppMessage() {    
+  onShareAppMessage() {
     return {
       title: '"' + wx.getStorageSync('mallName') + '" ' + wx.getStorageSync('share_profile'),
       path: '/pages/index/index?inviter_id=' + wx.getStorageSync('uid')
@@ -265,7 +295,7 @@ Page({
     const sku = []
     skuCurGoods.properties.forEach(p => {
       const o = p.childsCurGoods.find(ele => {return ele.active})
-      if (!o) {        
+      if (!o) {
         return
       }
       sku.push({

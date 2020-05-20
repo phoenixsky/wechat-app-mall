@@ -12,7 +12,7 @@ page,view,image,input,textarea {
 }
 .swiper-container{
   width: 100%;
-  position: relative;  
+  position: relative;
 }
 .swiper_box {
   width: 100%;
@@ -27,15 +27,16 @@ swiper-item image {
 }
 .goods-info{
   background-color: #fff;
-  padding: 35rpx 0;
+  padding: 20rpx 0;
   margin-bottom: 24rpx;
   width: 100%;
+  min-height: 180rpx;
   position: relative;
 }
 .goods-info-fx {
   position: absolute;
   right: 35rpx;
-  bottom: 60rpx;
+  bottom: 30rpx;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -53,7 +54,7 @@ swiper-item image {
   font-size: 24rpx;
   background: #fff;
   z-index: 20;
-} 
+}
 .goods-info-fx .item image {
   width: 50rpx;
   height: 50rpx;
@@ -67,37 +68,43 @@ swiper-item image {
 }
 .goods-info .goods-title{
   box-sizing: border-box;
-  padding: 0 35rpx;
+  padding: 0 25rpx;
   font-size: 32rpx;
   line-height: 1.4;
   color: #000;
-  margin-bottom: 28rpx;
+  margin-bottom: 10rpx;
 }
+.goods-info .goods-subtitle{
+  box-sizing: border-box;
+  padding: 0 25rpx;
+  font-size: 28rpx;
+  color: gray;
+}
+.goods-info .goods-subtitle .b{
+  font-weight: bold;
+}
+
 .goods-info .goods-share{
   box-sizing: border-box;
-  padding: 0 35rpx;
+  padding: 0 25rpx;
   font-size: 25rpx;
   line-height: 1.4;
   color: #CC0000;
   margin-bottom: 28rpx;
 }
-.goods-profile {
+.goods-commission {
+  box-sizing:border-box;
   display: flex;
-  align-items:center;
+  padding: 0 25rpx;
+  color: gray;
+  font-size: 28rpx;
 }
-.goods-profile .p{
+.goods-commission .price{
    color:#e64340;
-   font-size: 20pt;
-   margin-left: 30rpx;
-}
-.goods-profile .p text{
    font-size: 12pt;
+   margin: 0 5rpx;
 }
-.goods-profile .r{
-   color:#ccc;
-   font-size: 10pt;
-   margin-left: 30rpx;
-}
+
 .row-arrow {
   width: 100vw;
   padding: 0 32rpx;
@@ -120,17 +127,35 @@ swiper-item image {
   background-color: #fff;
 }
 .label-title{
-  font-size:28rpx;
+  font-size:34rpx;
   color:#000000;
-  padding: 30rpx;
+  padding: 10rpx 20rpx;
+  font-weight: bold;
 }
+
 .goods-text{
-  padding: 0 10rpx;
+  padding: 0 20rpx;
   font-size:28rpx;
   color:#666666;
   line-height: 56rpx;
   margin-bottom: 30rpx;
 }
+
+.goods-text .row{
+  display: flex;
+  flex-direction: row;
+}
+.goods-text .label{
+  width: 200rpx;
+  font-weight: bold;
+}
+
+.goods-text .space{
+  height:5rpx;
+  background-color: #F2f2f2;
+  margin: 0 -20rpx;
+}
+
 .goods-text image{
   width: 100%;
 }
@@ -154,6 +179,17 @@ swiper-item image {
   box-shadow:0 0 1rpx 0 ;
   align-items: center;
 }
+.footer-box .price{
+  font-size:52rpx;
+  font-weight: bold;
+  color:#e64340;
+  margin-left: 20rpx;
+}
+
+.footer-box .origin-price{
+  text-decoration: line-through;
+}
+
 .footer-box .contact {
   position: relative;
   height: 100%;
@@ -269,10 +305,16 @@ swiper-item image {
   width: 120rpx;
   height: 120rpx;
 }
+
+.pop-goods-head{
+  height: 40rpx;
+  padding: 15rpx 20rpx 40rpx;
+}
+
 .pop-goods-title{
   width: 484rpx;
   text-overflow: ellipsis;
-  white-space: nowrap;
+
   overflow: hidden;
   font-size:26rpx;
   color:#000000;
@@ -280,7 +322,6 @@ swiper-item image {
 .pop-goods-price {
   font-size:26rpx;
   color:#e64340;
-  margin-top:20rpx; 
 }
 .pop-goods-price .t1 {
   font-size:50rpx;
@@ -326,15 +367,15 @@ swiper-item image {
 .buy-num-box{
    display: flex;
    justify-content: space-between;
-   padding: 30rpx 30rpx 48rpx 0;
-   margin-left: 30rpx; 
-   border-top: 1px solid #eee;
-   margin-top: 30rpx;
+   padding: 30rpx 30rpx 30rpx 0;
+   margin-left: 30rpx;
+   border-bottom: 1px solid #eee;
    align-items: center;
 }
 .num-label{
-  font-size:26rpx;
+  /* font-size:26rpx; */
   color:#000000;
+  width: 200rpx;
 }
 .buy-num-box .num-box{
      display: flex;
@@ -355,10 +396,10 @@ swiper-item image {
   height: 100%;
 }
 .popup-join-btn{
-  width: 100%;
-  height: 89rpx;
+  flex:1;
+  height: 100rpx;
   text-align: center;
-  line-height: 89rpx;
+  line-height: 100rpx;
   font-size:34rpx;
   color:#ffffff;
   background-color: #e64340;
@@ -445,7 +486,7 @@ swiper-item image {
   margin-bottom: 100rpx;
   z-index: 999999;
 }
-.posterImg {  
+.posterImg {
   width: 100%;
 }
 .btn-create {

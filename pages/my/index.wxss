@@ -18,9 +18,10 @@ page,view,image,input {
   width: 750rpx;
 }
 .userinfo-avatar {
+  overflow: hidden;
 	width: 160rpx;
-	height: 160rpx;
-  border: 1rpx solid #eee;
+  height: 160rpx;
+  border: 2rpx solid #eee;
   border-radius: 50%;
 }
 .userinfo-nickname {

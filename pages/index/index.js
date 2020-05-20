@@ -1,4 +1,5 @@
-const WXAPI = require('apifm-wxapi')
+// const WXAPI = require('apifm-wxapi')
+const WXAPI = require('../../utils/api')
 const TOOLS = require('../../utils/tools.js')
 
 const APP = getApp()
@@ -11,6 +12,7 @@ APP.configLoadOK = () => {
 
 Page({
   data: {
+    imgPre: WXAPI.imgPre,
     inputVal: "", // 搜索框内容
     goodsRecommend: [], // 推荐商品
     kanjiaList: [], //砍价商品列表
@@ -79,43 +81,21 @@ Page({
       }
     }
     wx.setNavigationBarTitle({
-      title: wx.getStorageSync('mallName')
+      title: '觅会易优选平台'
     })
+    const clientId = wx.getStorageSync('clientId');
+    this.setData({
+      isConsumer: clientId ||  clientId == 19
+    });
     this.initBanners()
-    this.categories()
-    WXAPI.goods({
-      recommendStatus: 1
-    }).then(res => {
-      if (res.code === 0){
-        that.setData({
-          goodsRecommend: res.data
-        })
-      }      
-    })
-    that.getCoupons()
-    that.getNotice()
-    that.kanjiaGoods()
-    that.pingtuanGoods()
-    this.wxaMpLiveRooms()    
-  },
-  async miaoshaGoods(){
-    const res = await WXAPI.goods({
-      miaosha: true
-    })
-    if (res.code == 0) {
-      res.data.forEach(ele => {
-        const _now = new Date().getTime()
-        if (ele.dateStart) {
-          ele.dateStartInt = new Date(ele.dateStart).getTime() - _now
-        }
-        if (ele.dateEnd) {
-          ele.dateEndInt = new Date(ele.dateEnd).getTime() -_now
-        }
-      })
-      this.setData({
-        miaoshaGoods: res.data
-      })
-    }
+    this.getGoodsList(0);
+    // this.categories()
+    // that.getRecommendGoods()
+    // that.getCoupons()
+    // that.getNotice()
+    // that.kanjiaGoods()
+    // that.pingtuanGoods()
+    // this.wxaMpLiveRooms()
   },
   async wxaMpLiveRooms(){
     const res = await WXAPI.wxaMpLiveRooms()
@@ -128,19 +108,14 @@ Page({
   async initBanners(){
     const _data = {}
     // 读取头部轮播图
-    const res1 = await WXAPI.banners({
-      type: 'index'
-    })
-    if (res1.code == 700) {
-      wx.showModal({
-        title: '提示',
-        content: '请在后台添加 banner 轮播图片，自定义类型填写 index',
-        showCancel: false
+    const res = await WXAPI.banners()
+    if(res.code == 100){
+      this.setData({
+        banners:res.data
       })
-    } else {
-      _data.banners = res1.data
+    }else{
+      
     }
-    this.setData(_data)
   },
   onShow: function(e){
     this.setData({
@@ -148,17 +123,9 @@ Page({
     })
     // 获取购物车数据，显示TabBarBadge
     TOOLS.showTabBarBadge()
-    this.goodsDynamic()
-    this.miaoshaGoods()
+    // this.goodsDynamic()
   },
-  async goodsDynamic(){
-    const res = await WXAPI.goodsDynamic(0)
-    if (res.code == 0) {
-      this.setData({
-        goodsDynamic: res.data
-      })
-    }
-  },
+
   async categories(){
     const res = await WXAPI.goodsCategory()
     let categories = [];
@@ -191,10 +158,10 @@ Page({
     const res = await WXAPI.goods({
       categoryId: categoryId,
       page: this.data.curPage,
-      pageSize: this.data.pageSize
+
     })
     wx.hideLoading()
-    if (res.code == 404 || res.code == 700) {
+    if (res.code != 100) {
       let newData = {
         loadingMoreHidden: false
       }
@@ -215,6 +182,18 @@ Page({
       loadingMoreHidden: true,
       goods: goods,
     });
+  },
+  getRecommendGoods: function() {
+    var that = this;
+    WXAPI.goods({
+      recommendStatus: 1
+    }).then(res => {
+      if (res.code === 0){
+        that.setData({
+          goodsRecommend: res.data
+        })
+      }      
+    })
   },
   getCoupons: function() {
     var that = this;

@@ -1,56 +1,63 @@
 const app = getApp()
 const CONFIG = require('../../config.js')
-const WXAPI = require('apifm-wxapi')
+const WXAPI = require('../../utils/api')
 const AUTH = require('../../utils/auth')
 const TOOLS = require('../../utils/tools.js')
 
 Page({
 	data: {
     wxlogin: true,
-
+    user : null,
     balance:0.00,
     freeze:0,
     score:0,
     growth:0,
     score_sign_continuous:0,
-    rechargeOpen: false, // 是否开启充值[预存]功能
-
-    // 用户订单统计数据
-    count_id_no_confirm: 0,
-    count_id_no_pay: 0,
-    count_id_no_reputation: 0,
-    count_id_no_transfer: 0,
+    rechargeOpen: false // 是否开启充值[预存]功能
   },
 	onLoad() {
-	},
-  onShow() {
-    const _this = this
-    const order_hx_uids = wx.getStorageSync('order_hx_uids')
     this.setData({
-      version: CONFIG.version,
-      order_hx_uids
+      appVersion: wx.getAccountInfoSync().miniProgram.version || CONFIG.version
     })
-    AUTH.checkHasLogined().then(isLogined => {
-      this.setData({
-        wxlogin: isLogined
-      })
-      if (isLogined) {
-        _this.getUserApiInfo();
-        _this.getUserAmount();
-        _this.orderStatistics();
-      }
-    })
+	},	
+  async onShow() {
+    const _this = this
+
+    // this.setData({
+    //   version: CONFIG.version,
+    // })
+    
+    this.checkLogin();
+
     // 获取购物车数据，显示TabBarBadge
     TOOLS.showTabBarBadge();
+  },
+  async checkLogin(){
+    const isLogined = await AUTH.checkHasLogined();
+    // 弹出/关闭授权提示框
+    this.setData({
+      wxlogin: isLogined
+    })
+    if(isLogined){
+      let ret = await WXAPI.getUser(wx.getStorageSync('userId')); 
+      if(ret.code == 100){
+        this.setData({
+          user : ret.data
+        })
+      }
+    }
   },
   aboutUs : function () {
     wx.showModal({
       title: '关于我们',
-      content: '珍珍生活馆，期待你的光临\n Powered By Phoenixsky',
+      content: 'Powered By Phoenixsky',
       showCancel:false
     })
   },
   loginOut(){
+    this.setData({
+      user:null
+    })
     AUTH.loginOut()
     wx.reLaunch({
       url: '/pages/my/index'
@@ -78,7 +85,7 @@ Page({
           icon: 'success',
           duration: 2000
         })
-        this.getUserApiInfo();
+        // this.getUserApiInfo();
       } else {
         wx.showModal({
           title: '提示',
@@ -88,56 +95,7 @@ Page({
       }
     })
   },
-  getUserApiInfo: function () {
-    var that = this;
-    WXAPI.userDetail(wx.getStorageSync('token')).then(function (res) {
-      if (res.code == 0) {
-        let _data = {}
-        _data.apiUserInfoMap = res.data
-        if (res.data.base.mobile) {
-          _data.userMobile = res.data.base.mobile
-        }
-        if (that.data.order_hx_uids && that.data.order_hx_uids.indexOf(res.data.base.id) != -1) {
-          _data.canHX = true // 具有扫码核销的权限
-        }
-        that.setData(_data);
-      }
-    })
-  },
-  getUserAmount: function () {
-    var that = this;
-    WXAPI.userAmount(wx.getStorageSync('token')).then(function (res) {
-      if (res.code == 0) {
-        that.setData({
-          balance: res.data.balance.toFixed(2),
-          freeze: res.data.freeze.toFixed(2),
-          score: res.data.score,
-          growth: res.data.growth
-        });
-      }
-    })
-  },
-  handleOrderCount: function (count) {
-    return count > 99 ? '99+' : count;
-  },
-  orderStatistics: function () {
-    WXAPI.orderStatistics(wx.getStorageSync('token')).then((res) => {
-      if (res.code == 0) {
-        const {
-          count_id_no_confirm,
-          count_id_no_pay,
-          count_id_no_reputation,
-          count_id_no_transfer,
-        } = res.data || {}
-        this.setData({
-          count_id_no_confirm: this.handleOrderCount(count_id_no_confirm),
-          count_id_no_pay: this.handleOrderCount(count_id_no_pay),
-          count_id_no_reputation: this.handleOrderCount(count_id_no_reputation),
-          count_id_no_transfer: this.handleOrderCount(count_id_no_transfer),
-        })
-      }
-    })
-  },
+  
   goAsset: function () {
     wx.navigateTo({
       url: "/pages/asset/index"
@@ -192,6 +150,7 @@ Page({
   },
   clearStorage(){
     wx.clearStorageSync()
+    this.loginOut();
     wx.showToast({
       title: '已清除',
       icon: 'success'

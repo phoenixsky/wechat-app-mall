@@ -23,7 +23,7 @@ page,view,image,input {
   width: 700rpx;
   height: 66rpx;
   border-radius: 30rpx;
-  padding-left: 32rpx; 
+  padding-left: 32rpx;
 }
 .search image {
   width: 35rpx;
@@ -114,6 +114,9 @@ page,view,image,input {
   color: #000;
   font-size: 28rpx;
   line-height: 46rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 90rpx;
   font-weight: bold;
 }
 

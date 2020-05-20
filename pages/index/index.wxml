@@ -1,19 +1,8 @@
-<navigator url="/pages/shop/select">
-  <view wx:if="{{shopInfo}}" class="shops-container">
-    <view class="l">
-      <image src="/images/order-details/icon-address.png"></image>
-      <text>{{shopInfo.name}}</text>
-    </view>
-    <view class="r">
-      <text>切换门店</text>
-      <image src="/images/icon/next.png"></image>
-    </view>
-  </view>
-</navigator>
+
 <view class="swiper-container">
   <swiper class="swiper1" indicator-dots="true" indicator-active-color="#fff" autoplay circular>
     <swiper-item wx:for="{{banners}}" wx:key="id">
-      <image  mode="aspectFill" bindtap="tapBanner" data-url="{{item.linkUrl}}" src="{{item.picUrl}}" />
+      <image   bindtap="tapBanner" data-url="{{imgPre}}{{item.linkUrl}}" src="{{imgPre}}{{item.photoAddr}}" />
     </swiper-item>
   </swiper>
   <!-- <view class="search">
@@ -51,7 +40,7 @@
     <view class="category-column {{activeCategoryId == item.id ? 'type-item-on' : ''}}" bindtap="tabClick" id="{{item.id}}">
       <image mode="aspectFill" class="category-imgbox" src="{{item.icon}}"></image>
       <view class="category-title">{{item.name}}</view>
-    </view>          
+    </view>
   </view>
 </view>
 <view class="container">
@@ -106,7 +95,7 @@
     </view>
   </block>
   <!-- 秒杀结束 -->
-  <van-divider wx:if="{{goodsRecommend.length > 0 && activeCategoryId == 0}}" contentPosition="center">爆品推荐</van-divider> 
+  <van-divider wx:if="{{goodsRecommend.length > 0 && activeCategoryId == 0}}" contentPosition="center">爆品推荐</van-divider>
   <view class="goods-container" wx:if="{{goodsRecommend.length > 0 && activeCategoryId == 0}}">
     <view class="goods-box" wx:for="{{goodsRecommend}}" wx:key="id" bindtap="toDetailsTap" data-id="{{item.id}}">
       <view class="img-box">
@@ -170,18 +159,19 @@
   </block>
 
   <view class='space'></view>
-  <view class="weui-loadmore weui-loadmore_line">
+  <!-- <view class="weui-loadmore weui-loadmore_line">
     <view class="weui-loadmore__tips weui-loadmore__tips_in-line">商品列表</view>
-  </view>
+  </view> -->
   <view class="goods-container">
-    <view class="goods-box" wx:for="{{goods}}" wx:key="id" bindtap="toDetailsTap" data-id="{{item.id}}">
+    <view class="goods-box" wx:for="{{goods}}" wx:key="id" bindtap="toDetailsTap" data-id="{{item.skuId}}">
       <view class="img-box">
-        <image src="{{item.pic}}" class="image" mode="aspectFill" lazy-load="true" />
+        <image src="{{imgPre}}{{item.skuPhoto}}" class="image" mode="aspectFill" lazy-load="true" />
       </view>
-      <view class="goods-title">{{item.name}}</view>
-      <view style='display:flex;'>
-        <view class="goods-price">¥ {{item.minPrice}}</view>
-        <view wx:if="{{item.originalPrice && item.originalPrice > 0}}" class="goods-price" style='color:#aaa;text-decoration:line-through'>¥ {{item.originalPrice}}</view>
+      <view class="goods-title">{{item.skuName}}</view>
+      <view class="weui-flex">
+        <view class="goods-price">¥ {{item.price}}</view>
+        <view wx:if="{{item.retailPrice && item.retailPrice > 0}}" class="goods-price" style='color:#aaa;text-decoration:line-through'>¥ {{item.retailPrice}}</view>
+        <view wx:if="{{!isConsumer}}" class="goods-price" style='color:#aaa;'>佣金<text style="color:#e64340">{{item.ratio}}</text>%</view>
       </view>
     </view>
   </view>
@@ -189,9 +179,9 @@
     <view class="weui-loadmore__tips weui-loadmore__tips_in-line">没有更多啦</view>
   </view>
 </view>
-<view class='coupons-float' bindtap="goCoupons">
+<!-- <view class='coupons-float' bindtap="goCoupons">
   <image src="/images/gift.png"></image>
-</view>
+</view> -->
 
 <navigator wx:if="{{aliveRooms}}" url="plugin-private://wx2b03c6e691cd7370/pages/live-player-plugin?room_id={{aliveRooms[0].roomid}}">
   <view style="bottom:200rpx;" class='coupons-float'>

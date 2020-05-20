@@ -1,6 +1,7 @@
-const WXAPI = require('apifm-wxapi')
+const WXAPI = require('./api')
 
-async function checkSession(){
+
+async function checkSession() {
   return new Promise((resolve, reject) => {
     wx.checkSession({
       success() {
@@ -15,24 +16,19 @@ async function checkSession(){
 
 // 检测登录状态，返回 true / false
 async function checkHasLogined() {
-  const token = wx.getStorageSync('token')
-  if (!token) {
-    return false
+  // 没有用户缓存
+  if (!wx.getStorageSync('userId') ) {
+    return false;
   }
-  const loggined = await checkSession()
-  if (!loggined) {
-    wx.removeStorageSync('token')
-    return false
-  }
-  const checkTokenRes = await WXAPI.checkToken(token)
-  if (checkTokenRes.code != 0) {
-    wx.removeStorageSync('token')
-    return false
+  // session过期
+  if (!await checkSession()) {
+    wx.removeStorageSync('userId')
+    return false;
   }
   return true
 }
 
-async function wxaCode(){
+async function getWxCode() {
   return new Promise((resolve, reject) => {
     wx.login({
       success(res) {
@@ -43,13 +39,13 @@ async function wxaCode(){
           title: '获取code失败',
           icon: 'none'
         })
-        return resolve('获取code失败')
+        return reject('获取code失败')
       }
     })
   })
 }
 
-async function getUserInfo() {
+async function getWxUserInfo() {
   return new Promise((resolve, reject) => {
     wx.getUserInfo({
       success: res => {
@@ -63,70 +59,58 @@ async function getUserInfo() {
   })
 }
 
-async function login(page){
-  const _this = this
-  wx.login({
-    success: function (res) {
-      WXAPI.login_wx(res.code).then(function (res) {        
-        if (res.code == 10000) {
-          // 去注册
-          //_this.register(page)
-          return;
-        }
-        if (res.code != 0) {
-          // 登录错误
-          wx.showModal({
-            title: '无法登录',
-            content: res.msg,
-            showCancel: false
-          })
-          return;
-        }
-        wx.setStorageSync('token', res.data.token)
-        wx.setStorageSync('uid', res.data.uid)
-        if ( page ) {
-          page.onShow()
-        }
-      })
-    }
-  })
+/**
+ * 根据code登录
+ * @param page 
+ */
+async function login(page) {
+  let code = await getWxCode();
+  let res = await WXAPI.login(code);
+  if (res.code == 100) {
+    let {user:{userId,clientId,wxUnionId,wxOpenId}} = res.data;
+    wx.setStorageSync('userId', userId)
+    wx.setStorageSync('clientId', clientId)
+    wx.setStorageSync('unionId', wxUnionId)
+    wx.setStorageSync('openId', wxOpenId)
+    if (page) page.onShow();
+  } else {
+    console.error('登录错误')
+    wx.showToast({
+      title: '登录失败...',
+      icon:'none',
+    })
+  }
 }
 
 async function register(page) {
-  let _this = this;
-  wx.login({
-    success: function (res) {
-      let code = res.code; // 微信登录接口返回的 code 参数，下面注册接口需要用到
-      wx.getUserInfo({
-        success: function (res) {
-          let iv = res.iv;
-          let encryptedData = res.encryptedData;
-          let referrer = '' // 推荐人
-          let referrer_storge = wx.getStorageSync('referrer');
-          if (referrer_storge) {
-            referrer = referrer_storge;
-          }
-          // 下面开始调用注册接口
-          WXAPI.register_complex({
-            code: code,
-            encryptedData: encryptedData,
-            iv: iv,
-            referrer: referrer
-          }).then(function (res) {
-            _this.login(page);
-          })
-        }
-      })
-    }
-  })
+
+  let code = await getWxCode();
+  let {iv,encryptedData} = await getWxUserInfo();
+  let appId = wx.getAccountInfoSync().miniProgram.appId;
+  let res = await WXAPI.register({
+    appId,code,iv,encryptedData
+  });
+  if(res.code == 100){
+    login(page);
+    // let {userId,unionId} = res.data;
+    // wx.setStorageSync('userId', userId)
+    // wx.setStorageSync('unionId', unionId)
+  }else{
+    wx.showToast({
+      title: '注册失败,请重试...',
+      icon:'none',
+    })
+  }
 }
 
-function loginOut(){
-  wx.removeStorageSync('token')
-  wx.removeStorageSync('uid')
+function loginOut() {
+  wx.removeStorageSync('userId')
+  wx.removeStorageSync('clientId')
+  wx.removeStorageSync('unionId')
+  wx.removeStorageSync('openId')
 }
 
-async function checkAndAuthorize (scope) {
+async function checkAndAuthorize(scope) {
   return new Promise((resolve, reject) => {
     wx.getSetting({
       success(res) {
@@ -136,7 +120,7 @@ async function checkAndAuthorize (scope) {
             success() {
               resolve() // 无返回参数
             },
-            fail(e){
+            fail(e) {
               console.error(e)
               // if (e.errMsg.indexof('auth deny') != -1) {
               //   wx.showToast({
@@ -153,7 +137,7 @@ async function checkAndAuthorize (scope) {
                 success(res) {
                   wx.openSetting();
                 },
-                fail(e){
+                fail(e) {
                   console.error(e)
                   reject(e)
                 },
@@ -164,19 +148,19 @@ async function checkAndAuthorize (scope) {
           resolve() // 无返回参数
         }
       },
-      fail(e){
+      fail(e) {
         console.error(e)
         reject(e)
       }
     })
-  })  
+  })
 }
 
 
 module.exports = {
   checkHasLogined: checkHasLogined,
-  wxaCode: wxaCode,
-  getUserInfo: getUserInfo,
+  getWxCode: getWxCode,
+  getUserInfo: getWxUserInfo,
   login: login,
   register: register,
   loginOut: loginOut,

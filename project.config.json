@@ -24,8 +24,8 @@
 	},
 	"compileType": "miniprogram",
 	"libVersion": "2.10.4",
-	"appid": "wx3d32a664e8cd49c7",
-	"projectname": "%E7%8F%8D%E7%8F%8D%E7%94%9F%E6%B4%BB%E9%A6%86",
+	"appid": "wx7a8be4ba9181c07f",
+	"projectname": "%E8%A7%85%E4%BC%9A%E6%98%93%E4%BC%98%E9%80%89",
 	"scripts": {},
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
@@ -68,10 +68,10 @@
 					"scene": 1011
 				},
 				{
-					"id": -1,
+					"id": 2,
 					"name": "商品详情页面",
 					"pathName": "pages/goods-details/index",
-					"query": "id= 6761",
+					"query": "id= 12",
 					"scene": null
 				},
 				{
@@ -113,7 +113,29 @@
 					"id": -1,
 					"name": "notice",
 					"pathName": "pages/notice/index",
+					"query": "",
 					"scene": null
+				},
+				{
+					"id": 9,
+					"name": "订单列表",
+					"pathName": "pages/order-list/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 10,
+					"name": "订单详情页面",
+					"pathName": "pages/order-details/index",
+					"query": "id=80ce791a-33d4-469a-8d0a-f9e0b2926678",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "详情(分享链接)",
+					"pathName": "pages/goods-details/index",
+					"query": "id=12&inviter_id=1563",
+					"scene": 1007
 				}
 			]
 		}

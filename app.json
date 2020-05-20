@@ -37,11 +37,11 @@
     "pages/deposit/pay"
   ],
   "window": {
-    "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "",
     "navigationBarTextStyle": "black",
-    "onReachBottomDistance": 50
+    "onReachBottomDistance": 50,
+    "backgroundTextStyle": "dark"
   },
   "tabBar": {
     "color": "#6e6d6b",
@@ -60,12 +60,6 @@
         "iconPath": "images/nav/ic_catefory_normal.png",
         "selectedIconPath": "images/nav/ic_catefory_pressed.png",
         "text": "分类"
-      },
-      {
-        "pagePath": "pages/shop-cart/index",
-        "iconPath": "images/nav/cart-off.png",
-        "selectedIconPath": "images/nav/cart-on.png",
-        "text": "购物车"
       },
       {
         "pagePath": "pages/my/index",
@@ -88,10 +82,7 @@
     "parser":"/components/parser.20200414.min/parser",
     "van-notice-bar": "@vant/weapp/notice-bar/index",
     "van-search": "@vant/weapp/search/index",
-    "van-divider": "@vant/weapp/divider/index",
-    "van-icon": "@vant/weapp/icon/index",
-    "van-count-down": "@vant/weapp/count-down/index",
-    "van-button": "@vant/weapp/button/index"
+    "van-popup" : "@vant/weapp/popup/index"
   },
   "sitemapLocation": "sitemap.json"
 }
